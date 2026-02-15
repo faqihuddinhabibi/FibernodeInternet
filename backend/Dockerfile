@@ -1,11 +1,8 @@
-FROM node:22-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --production=false
-
 FROM node:22-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+RUN apk add --no-cache git python3 make g++
+COPY package.json ./
+RUN npm install
 COPY . .
 ARG APP_VERSION=0.0.0
 ENV APP_VERSION=${APP_VERSION}
@@ -19,10 +16,13 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/tsconfig.json ./
+COPY --from=builder /app/drizzle.config.ts ./
+COPY --from=builder /app/src ./src
 COPY docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh && \
     mkdir -p /app/wa-sessions /app/uploads && \
-    chown -R fibernode:nodejs /app/wa-sessions /app/uploads
+    chown -R fibernode:nodejs /app
 USER fibernode
 EXPOSE 4000
 ENTRYPOINT ["./docker-entrypoint.sh"]
