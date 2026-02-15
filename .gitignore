@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+wa-sessions/
+uploads/
+backups/
+*.log
+.DS_Store
+coverage/
+*.tsbuildinfo
+.vite/

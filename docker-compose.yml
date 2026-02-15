@@ -1,0 +1,110 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fibernode-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-fibernode}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fibernode-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-fibernode}
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-min-32-chars-long-here}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-refresh-secret-key-min-32-chars-long-here}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-your-64-character-hex-encryption-key-here-1234567890abcdef}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-superadmin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      ADMIN_NAME: ${ADMIN_NAME:-Super Admin}
+      ADMIN_BUSINESS_NAME: ${ADMIN_BUSINESS_NAME:-FiberNode Pusat}
+      TZ: Asia/Jakarta
+    volumes:
+      - wa_sessions:/app/wa-sessions
+      - uploads_data:/app/uploads
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fibernode-web
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  nginx-proxy:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: fibernode-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certs_data:/etc/nginx/certs
+      - certbot_data:/var/www/certbot
+    depends_on:
+      - frontend
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    container_name: fibernode-certbot
+    restart: unless-stopped
+    volumes:
+      - certbot_data:/var/www/certbot
+      - certs_data:/etc/letsencrypt
+    entrypoint: /bin/sh
+    command: -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done"
+    profiles:
+      - ssl
+
+  db-backup:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile.backup
+    container_name: fibernode-backup
+    restart: unless-stopped
+    environment:
+      PGHOST: postgres
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATABASE: ${POSTGRES_DB:-fibernode}
+    volumes:
+      - backups_data:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  wa_sessions:
+  uploads_data:
+  certs_data:
+  certbot_data:
+  backups_data:

@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3B82F6;
+  --color-primary-dark: #2563EB;
+  --color-primary-light: #60A5FA;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #06B6D4;
+  --color-surface: #1E293B;
+  --color-surface-light: #334155;
+  --color-bg: #0F172A;
+  --color-bg-light: #1E293B;
+  --color-text: #F8FAFC;
+  --color-text-muted: #94A3B8;
+  --color-border: #334155;
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100dvh;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-surface-light) transparent;
+}
+
+input, select, textarea {
+  color-scheme: dark;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}

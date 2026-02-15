@@ -1,0 +1,21 @@
+{
+  "name": "fibernode-internet",
+  "version": "0.0.0",
+  "private": true,
+  "description": "FiberNode Internet - Sistem Manajemen Tagihan Langganan WiFi",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
