@@ -26,6 +26,9 @@ import { uploadsRouter } from './modules/uploads/uploads.controller.js';
 const app = express();
 const httpServer = createServer(app);
 
+// Trust proxy (behind nginx)
+app.set('trust proxy', 1);
+
 // Initialize Socket.IO
 initSocket(httpServer);
 

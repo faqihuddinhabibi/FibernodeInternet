@@ -5,6 +5,7 @@ export const generalLimiter = rateLimit({
   max: 200,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false, xForwardedForHeader: false },
   message: {
     error: {
       message: 'Terlalu banyak request, coba lagi nanti',
@@ -18,6 +19,7 @@ export const authLimiter = rateLimit({
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false, xForwardedForHeader: false },
   message: {
     error: {
       message: 'Terlalu banyak percobaan login, coba lagi nanti',
@@ -31,6 +33,7 @@ export const uploadLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false, xForwardedForHeader: false },
   message: {
     error: {
       message: 'Terlalu banyak upload, coba lagi nanti',

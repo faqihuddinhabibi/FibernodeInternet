@@ -7,6 +7,7 @@ import {
   Users, Receipt, TrendingUp, AlertTriangle, Loader2,
   Wifi, WifiOff, UserPlus, FileText, MessageSquare,
   ArrowUpRight, ArrowDownRight, Activity, Zap,
+  Package, Settings, User, LogOut,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -85,10 +86,10 @@ function DashboardPage() {
               Periode: <span className="text-primary font-semibold">{stats?.invoices?.period || new Date().toISOString().slice(0, 7)}</span>
             </p>
           </div>
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${isWaConnected ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
               {isWaConnected ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
-              WA {isWaConnected ? 'Online' : 'Offline'}
+              <span className="hidden sm:inline">WA</span> {isWaConnected ? 'Online' : 'Offline'}
             </div>
           </div>
         </div>
@@ -186,6 +187,33 @@ function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Grid - only visible on mobile since desktop has sidebar */}
+      <div className="lg:hidden bg-surface rounded-2xl p-4 border border-border">
+        <h2 className="font-semibold text-text mb-3">Menu</h2>
+        <div className={`grid gap-2 ${user?.role === 'superadmin' ? 'grid-cols-3' : 'grid-cols-2'}`}>
+          {user?.role === 'superadmin' && (
+            <>
+              <Link to="/admin/users" className="flex flex-col items-center gap-1.5 p-3 bg-bg rounded-xl hover:bg-surface-light transition-all">
+                <Users className="w-5 h-5 text-primary" />
+                <span className="text-[11px] text-text font-medium">Mitra</span>
+              </Link>
+              <Link to="/admin/packages" className="flex flex-col items-center gap-1.5 p-3 bg-bg rounded-xl hover:bg-surface-light transition-all">
+                <Package className="w-5 h-5 text-warning" />
+                <span className="text-[11px] text-text font-medium">Paket</span>
+              </Link>
+              <Link to="/admin/settings" className="flex flex-col items-center gap-1.5 p-3 bg-bg rounded-xl hover:bg-surface-light transition-all">
+                <Settings className="w-5 h-5 text-info" />
+                <span className="text-[11px] text-text font-medium">Pengaturan</span>
+              </Link>
+            </>
+          )}
+          <Link to="/profile" className="flex flex-col items-center gap-1.5 p-3 bg-bg rounded-xl hover:bg-surface-light transition-all">
+            <User className="w-5 h-5 text-success" />
+            <span className="text-[11px] text-text font-medium">Profil</span>
+          </Link>
         </div>
       </div>
 

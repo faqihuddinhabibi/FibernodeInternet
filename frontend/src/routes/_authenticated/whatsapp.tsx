@@ -7,8 +7,9 @@ import { formatDateTime, formatPhone } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import {
   MessageSquare, Wifi, WifiOff, Loader2, Send, QrCode,
-  Search, CheckCircle, XCircle, Clock, AlertTriangle, Filter,
+  Search, CheckCircle, XCircle, Clock, AlertTriangle,
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 export const Route = createFileRoute('/_authenticated/whatsapp')({
   component: WhatsAppPage,
@@ -166,7 +167,7 @@ function WhatsAppPage() {
           <div className="mt-4 flex flex-col items-center gap-3 p-4 bg-white rounded-xl">
             <QrCode className="w-6 h-6 text-gray-600" />
             <p className="text-sm text-gray-600 text-center">Scan QR code dengan WhatsApp</p>
-            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(qrCode)}`} alt="QR Code" className="w-64 h-64" />
+            <QRCodeSVG value={qrCode} size={220} level="M" className="w-48 h-48 sm:w-56 sm:h-56" />
           </div>
         )}
       </div>
@@ -175,7 +176,7 @@ function WhatsAppPage() {
       {queue && (
         <div className="bg-surface rounded-2xl p-4 border border-border">
           <h2 className="font-semibold text-text mb-3">Antrian Pesan</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="text-center p-3 bg-bg rounded-xl">
               <p className="text-lg font-bold text-warning">{queue.pending}</p>
               <p className="text-xs text-text-muted">Menunggu</p>
@@ -237,7 +238,7 @@ function WhatsAppPage() {
       <div className="bg-surface rounded-2xl p-4 border border-border">
         <h2 className="font-semibold text-text mb-3">Log Pesan</h2>
 
-        <div className="flex gap-2 mb-3">
+        <div className="flex flex-col sm:flex-row gap-2 mb-3">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
@@ -251,7 +252,7 @@ function WhatsAppPage() {
           <select
             value={logFilter}
             onChange={(e) => { setLogFilter(e.target.value); setLogPage(1); }}
-            className="px-3 py-2 bg-bg border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full sm:w-auto px-3 py-2 bg-bg border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="">Semua</option>
             <option value="reminder">Reminder</option>

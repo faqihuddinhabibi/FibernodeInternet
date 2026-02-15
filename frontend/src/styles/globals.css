@@ -29,6 +29,21 @@ body {
   min-height: 100dvh;
 }
 
+/* Light mode overrides */
+html.light {
+  --color-surface: #FFFFFF;
+  --color-surface-light: #F1F5F9;
+  --color-bg: #F8FAFC;
+  --color-bg-light: #FFFFFF;
+  --color-text: #0F172A;
+  --color-text-muted: #64748B;
+  --color-border: #E2E8F0;
+}
+
+html.light input, html.light select, html.light textarea {
+  color-scheme: light;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-surface-light) transparent;
@@ -54,4 +69,14 @@ input, select, textarea {
 
 .animate-spin-slow {
   animation: spin-slow 2s linear infinite;
+}
+
+@keyframes splash-fade {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-splash {
+  animation: splash-fade 3s ease-in-out forwards;
 }

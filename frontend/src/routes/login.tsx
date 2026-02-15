@@ -28,7 +28,7 @@ function LoginPage() {
 
     try {
       await login(username, password);
-      navigate({ to: '/' });
+      window.location.href = '/';
     } catch (err: any) {
       setError(err.message || 'Login gagal');
     } finally {
